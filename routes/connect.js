@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
   // [เครื่อง รพสต. password:pichet002] [เรื่องที่บ้าน password:pichet68]
-mongoose.connect('mongodb://superadmin:pichet002@localhost:27017/karupanDB', {
+mongoose.connect('mongodb://superadmin:pichet68@localhost:27017/karupanDB', {
   authSource: 'admin' // ระบุฐานข้อมูลที่ใช้ตรวจสอบสิทธิ์
 })
 .then(() => {
