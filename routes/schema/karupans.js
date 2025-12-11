@@ -2,6 +2,8 @@ var mongoose = require('../connect');//เชื่อมต่อฐานข�
 var karupansSchema = new mongoose.Schema({
     kname: String,
     karupantype: String,
+    karupanCode:String,
+    redate: Date,
     detail: String,
     price: Number,
     station: String,
