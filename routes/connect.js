@@ -10,3 +10,4 @@ mongoose.connect('mongodb://superadmin:pichet68@localhost:27017/karupanDB', {
   console.log('Error connecting to database karupanDB', error);
 });
 
+module.exports = mongoose; 
