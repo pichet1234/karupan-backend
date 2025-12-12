@@ -3,9 +3,9 @@ var karupans = mongoose.model('karupans',require('../schema/karupans'));
 
 module.exports = { 
     addkarupans: async (req, res) => {
-        console.log(req.body);
         try{
-          /*  const apidata = await karupans.create({
+            const imageUrl = req.file.originalname ;
+            const apidata = await karupans.create({
                 kname: req.body.kname,
                 karupantype: req.body.karupantype,
                 karupanCode: req.body.karupanCode,
@@ -17,9 +17,9 @@ module.exports = {
                 usefullife: req.body.usefullife,
                 status: req.body.status,
                 brand: req.body.brand,
-                imageUrl: req.body.imageUrl
+                imageUrl: imageUrl
              });
-             return res.status(201).json({ message: 'karupans added successfully', data: apidata });*/
+             return res.status(201).json({ message: 'karupans added successfully', data: apidata });
         } catch (error) { 
             res.status(500).json({ message: 'Server Error', error: error.message });
         }

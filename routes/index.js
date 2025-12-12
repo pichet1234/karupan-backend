@@ -20,6 +20,8 @@ router.get('/', function(req, res, next) {
 
 router.post('/addkarupanType', (req, res,next)=> { karupanType.addkarupanType(req, res); });//เพิ่มประเภทครุภัณฑ์
 
-router.post('/addkarupans', (req, res,next)=> { karupans.addkarupans(req, res); });//เพิ่มครุภัณฑ์
+router.post('/addkarupans', upload.single('file'), (req, res, next) => {
+  karupans.addkarupans(req, res);
+});
 
 module.exports = router;
