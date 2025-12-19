@@ -12,5 +12,14 @@ module.exports = {
         catch (error) { 
             res.status(500).json({ message: 'Server Error', error: error.message });
         }
-    }
+    },
+    getkarupan: async (req, res) => {
+        try {
+            const apidata = await karupanType.find( );
+            res.status(200).json({ message: 'karupanType retrieved successfully', data: apidata });
+        }
+        catch (error) { 
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
+    }    
 }

@@ -1,7 +1,7 @@
 var mongoose = require('../connect');//เชื่อมต่อฐานข้อมูล
 var karupansSchema = new mongoose.Schema({
     kname: String,
-    karupantype: String,
+    karupantype: mongoose.Schema.Types.ObjectId,
     karupanCode:String,
     redate: Date,
     detail: String,
