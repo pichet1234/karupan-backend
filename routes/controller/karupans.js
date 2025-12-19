@@ -4,7 +4,10 @@ var karupans = mongoose.model('karupans',require('../schema/karupans'));
 module.exports = { 
     addkarupans: async (req, res) => {
         try{
-            const imageUrl = req.file.originalname ;
+            let imageUrl = '';
+            if (req.file) {
+              imageUrl = `uploads/${req.file.originalname}`;
+            }
             const apidata = await karupans.create({
                 kname: req.body.kname,
                 karupantype: req.body.karupantype,
