@@ -6,7 +6,7 @@ module.exports = {
         try{
             let imageUrl = '';
             if (req.file) {
-              imageUrl = `uploads/${req.file.originalname}`;
+              imageUrl = `uploads/${req.file.filename}`;
             }
             const apidata = await karupans.create({
                 kname: req.body.kname,
