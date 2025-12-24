@@ -57,7 +57,7 @@ module.exports = {
                  await regitdonate.create({ 
                      karupanid: apidata._id,
                      donate_date: new Date(),
-                     name: req.body.name,
+                     name: req.body.uname,
                      address: req.body.address,
                      tel: req.body.tel
                     });

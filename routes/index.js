@@ -52,5 +52,6 @@ router.get('/getkarupan', (req, res) => { karupanType.getkarupan(req, res); });/
 router.post('/addkarupans', upload.single('file'), (req, res, next) => {
   karupans.addkarupans(req, res);
 });
+router.post('/donatekarupan', upload.single('file'), (req, res, next) => { karupans.donatekarupan(req, res); });
 
 module.exports = router;
