@@ -66,5 +66,17 @@ module.exports = {
         } catch (error) { 
             res.status(500).json({ message: 'Server Error', error: error.message });
         }
+    },
+    getKarupan: async (req, res ) => {
+        try {
+            const items = ["เตียงผู้ป่วย","ถังออกซิเจนใหญ่","ที่นอนลม" ,"เครื่องผลิตออกซิเจน","เครื่องผลิตออกซิเจนด้วยระบบไฟฟ้า","ที่นอนลม","วีลแชร์"];
+            const data = await karupans.find({
+            kname: { $in: items },
+            status: 'ใช้งานได้'
+            });
+            res.status(200).json({ message: 'Success', data }); 
+        } catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
     }
 }

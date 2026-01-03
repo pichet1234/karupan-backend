@@ -48,6 +48,7 @@ const upload = multer({ storage });
 
 router.post('/addkarupanType', (req, res,next)=> { karupanType.addkarupanType(req, res); });//เพิ่มประเภทครุภัณฑ์
 router.get('/getkarupan', (req, res) => { karupanType.getkarupan(req, res); });//ดึงข้อมูลประเภทครุภัณฑ์
+router.get('/getkarupanborrow', (req, res,next) => { karupans.getKarupan(req, res); });//ดึงข้อมูลครุภัณฑ์เฉพราะที่สามารถยืมได้
 
 router.post('/addkarupans', upload.single('file'), (req, res, next) => {
   karupans.addkarupans(req, res);
