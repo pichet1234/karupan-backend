@@ -3,7 +3,7 @@ var karupanType = mongoose.model('karupanType',require('../schema/karupanType'))
 module.exports = {
     addkarupanType: async (req, res) => {
         try {
-            const apidata = await karupanType.insertOne({
+            const apidata = await karupanType.create({
                 karupanType: req.body.karupanType,
                 details: req.body.details
             });

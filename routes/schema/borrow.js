@@ -12,7 +12,10 @@ var borrowSchema = new mongoose.Schema({
     },
     expenses: Number,
     details: String,
-    remark: String
+    remark: String,
+    return_date: {
+         type: Date
+    }
 },{ collection: 'borrow'});
 
 module.exports = mongoose.model('borrow', borrowSchema);
