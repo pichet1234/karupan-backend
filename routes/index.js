@@ -7,6 +7,8 @@ const multer = require('multer');
 var karupanType = require('./controller/karupanType');
 var karupans = require('./controller/karupans');
 var person = require('./controller/person');
+var borrow = require('./controller/borrow');
+var borrowdetails = require('./controller/borrow_details');
 
 router.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*'); // ระบุ origin ให้ชัดเจน
@@ -56,7 +58,8 @@ router.post('/addkarupans', upload.single('file'), (req, res, next) => {
 });
 router.post('/donatekarupan', upload.single('file'), (req, res, next) => { karupans.donatekarupan(req, res); });
 router.post('/addPersonnel', (req, res, next) => { person.addPerson(req, res); }); //เพิ่มบุคคลติดต่อ
-router.post('/addborrow', (req, res, next) => { karupans.addBorrow(req, res); }); //เพิ่มการยืมครุภัณฑ์
+router.post('/addborrow', (req, res, next) => { borrow.addBorrow(req, res); }); //เพิ่มการยืมครุภัณฑ์
+router.post('/borrowdetails', (req, res, next)=> { borrowdetails.addBorrowDetails(req, res); });//เพิ่มรายละเอียดการยืมครุภัณฑ์
 
 
 module.exports = router;

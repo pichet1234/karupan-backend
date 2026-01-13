@@ -21,7 +21,7 @@ module.exports = {
                 remark: req.body.remark,
                 return_date: null
             });
-            res.status(201).json({ message: 'Borrow record added successfully', data: apidata });
+            res.status(201).json({ message: 'บันทึกการยืมสำเร็จ', data: apidata });
         } catch (error) {
             res.status(500).json({ message: 'Server Error', error: error.message });
         }

@@ -1,9 +1,10 @@
 var mongoose = require('../connect');
+var Schema = mongoose.Schema;
 var borrowSchema = new mongoose.Schema({
     borrow_date: Date,
-    person_id: new mongoose.Schema.Types.ObjectId,
+    person_id: { type: Schema.Types.ObjectId, ref: 'person' },
     patient: String,
-    user_id: new mongoose.Schema.Types.ObjectId,
+    user_id: String,
     address: {
         bannumber: String,
         moo: String,
