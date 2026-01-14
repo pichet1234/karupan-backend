@@ -2,28 +2,41 @@ var mongoose = require('../connect');//เชื่อมต่อฐานข�
 var borrowDetails = require('../schema/borrow_details');
 
 module.exports = {
-    addBorrowDetails: async (req, res) => {
-        try {
-            const { items } = req.body;
+  addBorrowDetails: async (req, res) => {
+    try {
+      const { items } = req.body;
+      console.log(items);
 
-            if (!Array.isArray(items) || items.length === 0) {
-                return res.status(400).json({
-                    message: 'ข้อมูล items ไม่ถูกต้อง'
-                });
-            }
+      if (!Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({
+          message: 'ข้อมูล items ไม่ถูกต้อง'
+        });
+      }
 
-            const apidata = await borrowDetails.insertMany(items);
+      // แปลงข้อมูลให้ตรง schema
+      const docs = items.map(item => ({
+        borrowid: item.borrowid,
+        karupanid: item.karupanid,
+        kname: item.kname,
+        karupuncode: item.karupuncode,
+        statuskarupan: item.statuskarupan,
+        diposit: item.diposit
+      }));
 
-            res.status(201).json({
-                message: 'บันทึกรายละเอียดการยืมสำเร็จ',
-                count: apidata.length,
-                data: apidata
-            });
-        } catch (error) {
-            res.status(500).json({
-                message: 'Server Error',
-                error: error.message
-            });
-        }
+      const apidata = await borrowDetails.insertMany(docs);
+
+      res.status(201).json({
+        message: 'บันทึกรายละเอียดการยืมสำเร็จ',
+        count: apidata.length,
+        data: apidata
+      });
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: 'Server Error',
+        error: error.message
+      });
     }
+  }
 };

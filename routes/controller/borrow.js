@@ -6,15 +6,13 @@ module.exports = {
         try {
             const apidata = await borrow.create({
                 borrow_date: req.body.borrow_date,
-                return_date: req.body.return_date,
-                karupanid: req.body.karupanid,
-                personid: req.body.personid,
-                user_id: req.body.user_id,
+                person_id: req.body.personid,
+                user_id: req.body.userid,
                 address: {
-                    bannumber: req.body.address.bannumber,
-                    moo: req.body.address.moo,
-                    village: req.body.address.village,
-                    tambon: req.body.address.tambon
+                    bannumber: req.body.bannumber,
+                    moo: req.body.moo,
+                    village: req.body.village,
+                    tambon: req.body.tambon
                 },
                 expenses: 0,
                 details: req.body.details,

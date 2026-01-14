@@ -1,15 +1,17 @@
 var mongoose = require('../connect');
 const Schema = mongoose.Schema;
 var borrowdetailsSchema = new mongoose.Schema({
-    borrow_id: {
+    borrowid: {
         type: Schema.Types.ObjectId,
         ref: 'borrow',          // ← ชื่อ model ที่อ้างอิง
         required: true
     },
-    karupan_id: {
+    karupanid: {
         type: Schema.Types.ObjectId, ref: 'karupans', required: true 
     },
-    statusBorw: String,
+    kname: String,
+    karupuncode: String,
+    statuskarupan: String,
     diposit: Number,
 },{ collection: 'borrow_details'});
 
