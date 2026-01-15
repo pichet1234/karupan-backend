@@ -5,7 +5,6 @@ module.exports = {
   addBorrowDetails: async (req, res) => {
     try {
       const { items } = req.body;
-      console.log(items);
 
       if (!Array.isArray(items) || items.length === 0) {
         return res.status(400).json({
