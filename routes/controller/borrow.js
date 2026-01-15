@@ -7,6 +7,7 @@ module.exports = {
             const apidata = await borrow.create({
                 borrow_date: req.body.borrow_date,
                 person_id: req.body.personid,
+                patient: req.body.patient,
                 user_id: req.body.userid,
                 address: {
                     bannumber: req.body.bannumber,
