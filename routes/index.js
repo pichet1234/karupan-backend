@@ -60,6 +60,7 @@ router.post('/donatekarupan', upload.single('file'), (req, res, next) => { karup
 router.post('/addPersonnel', (req, res, next) => { person.addPerson(req, res); }); //เพิ่มบุคคลติดต่อ
 router.post('/addborrow', (req, res, next) => { borrow.addBorrow(req, res); }); //เพิ่มการยืมครุภัณฑ์
 router.post('/borrowdetails', (req, res, next)=> { borrowdetails.addBorrowDetails(req, res); });//เพิ่มรายละเอียดการยืมครุภัณฑ์
+router.get('/getkarupanall', (req, res, next) => { karupans.getkarupanall(req, res); });//ดึงข้อมูลครุภัณฑ์ทั้งหมด
 
 
 module.exports = router;

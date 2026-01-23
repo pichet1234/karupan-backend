@@ -12,7 +12,7 @@ module.exports = {
             }
             const apidata = await karupans.create({
                 kname: req.body.kname,
-                karupantype: req.body.karupantype,
+                karupantypeid: req.body.karupantype,
                 karupanCode: req.body.karupanCode,
                 redate: req.body.redate,
                 detail: req.body.detail,
@@ -39,7 +39,7 @@ module.exports = {
             }
                 const apidata = await karupans.create({
                 kname: req.body.kname,
-                karupantype: req.body.karupantype,
+                karupantypeid: req.body.karupantype,
                 karupanCode: req.body.karupanCode,
                 redate: req.body.redate,
                 detail: req.body.detail,
@@ -76,6 +76,23 @@ module.exports = {
             });
             res.status(200).json({ message: 'Success', data }); 
         } catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
+    },
+    getkarupanall: async (req , res) =>{
+        try {
+            const data = await karupans.aggregate([
+                {
+                    $lookup: {
+                        from: 'karupanType',
+                        localField: 'karupantypeid',
+                        foreignField: '_id',
+                        as: 'karupanTypeInfo'
+                    }
+                }
+            ]);
+            res.status(200).json({ message: 'Success', data }); 
+        } catch (error){
             res.status(500).json({ message: 'Server Error', error: error.message });
         }
     }
