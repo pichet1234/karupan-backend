@@ -95,5 +95,50 @@ module.exports = {
         } catch (error){
             res.status(500).json({ message: 'Server Error', error: error.message });
         }
+    },
+    countkarupanall: async (req, res) => {
+        try {
+            const count = await karupans.countDocuments();
+            res.status(200).json({ message: 'Success', count });
+        } catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
+    },
+    countkpssucess: async (req, res) => { // นับจำนวนครุภัณฑ์ที่มีสถานะ "ใช้งานได้"
+        try {
+            const result = await karupans.aggregate([
+                {
+                    $match: { status: 'ใช้งานได้' }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: 1 }
+                    }
+                }
+            ]);
+            res.status(200).json({ message: 'Success', result });
+        } catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }           
+    },
+    countkpsdanger: async (req, res) => { // นับจำนวนครุภัณฑ์ที่มีสถานะ "ชำรุด"
+        try {
+            const result = await karupans.aggregate([   
+                {
+                    $match: { status: 'ชำรุด' }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: 1 }
+                     }
+                }
+            ]);
+            res.status(200).json({ message: 'Success', result });
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
     }
 }

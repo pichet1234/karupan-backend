@@ -61,6 +61,8 @@ router.post('/addPersonnel', (req, res, next) => { person.addPerson(req, res); }
 router.post('/addborrow', (req, res, next) => { borrow.addBorrow(req, res); }); //เพิ่มการยืมครุภัณฑ์
 router.post('/borrowdetails', (req, res, next)=> { borrowdetails.addBorrowDetails(req, res); });//เพิ่มรายละเอียดการยืมครุภัณฑ์
 router.get('/getkarupanall', (req, res, next) => { karupans.getkarupanall(req, res); });//ดึงข้อมูลครุภัณฑ์ทั้งหมด
-
+router.get('/countkarupanall', (req, res, next) => { karupans.countkarupanall(req, res); });//นับจำนวนครุภัณฑ์ทั้งหมด
+router.get('/countkarupanstatus', (req, res, next) => { karupans.countkpssucess(req, res); });
+router.get('/countkarupandanger', (req, res, next)=> { karupans.countkpsdanger(req, res); })
 
 module.exports = router;
