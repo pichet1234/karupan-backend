@@ -1,5 +1,6 @@
 var mongoose = require('../connect');//เชื่อมต่อฐานข้อมูล
 var borrowDetails = require('../schema/borrow_details');
+var karupans = require('../schema/karupans');
 
 module.exports = {
   addBorrowDetails: async (req, res) => {
@@ -23,6 +24,11 @@ module.exports = {
       }));
 
       const apidata = await borrowDetails.insertMany(docs);
+      const updatePromises = apidata.map(data =>
+        karupans.findByIdAndUpdate(data.karupanid, { status: "ถูกยืม" }, { new: true })
+      );
+
+      await Promise.all(updatePromises);
 
       res.status(201).json({
         message: 'บันทึกรายละเอียดการยืมสำเร็จ',
