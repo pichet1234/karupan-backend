@@ -1,5 +1,5 @@
 var mongoose = require('../connect');
-var karupans = mongoose.model('karupans',require('../schema/karupans'));
+var karupans = require('../schema/karupans');
 var regitdonate = mongoose.model('regitdonate',require('../schema/regitdonate'));
 
 module.exports = { 

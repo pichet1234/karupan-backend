@@ -2,7 +2,7 @@ var mongoose = require('../connect');//เชื่อมต่อฐานข�
 var Schema = mongoose.Schema;
 var karupansSchema = new mongoose.Schema({
     kname: String,
-    karupantypeid: { type: Schema.Types.ObjectId, ref: 'karupanType' },
+    karupantypeid: { type: Schema.Types.ObjectId, ref: 'karupanType' ,required: true},
     karupanCode:String,
     redate: Date,
     detail: String,
@@ -15,4 +15,4 @@ var karupansSchema = new mongoose.Schema({
     imageUrl: String,
 },{ collection: 'karupans' });
 
-module.exports = karupansSchema;
+module.exports = mongoose.model('karupans', karupansSchema);

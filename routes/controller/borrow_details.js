@@ -23,19 +23,17 @@ module.exports = {
         diposit: item.diposit
       }));
 
-      const apidata = await borrowDetails.insertMany(docs);
-      console.log(apidata)
-      const updatePromises = items.map(data =>
-        karupans.findByIdAndUpdate(
-        {_id:data.karupanid},
-        { status: "ถูกยืม" },
-        { new: true }
-        )
-        );
-        
-        
-        await Promise.all(updatePromises);
+        const apidata = await borrowDetails.insertMany(docs);
 
+      const updatePromises = apidata.map(item => 
+        karupans.findByIdAndUpdate(
+          item.karupanid,
+          { status: "ถูกยืม" },
+          { new: true }
+        )
+      );
+
+      await Promise.all(updatePromises);
       res.status(201).json({
         message: 'บันทึกรายละเอียดการยืมสำเร็จ',
         count: apidata.length,
