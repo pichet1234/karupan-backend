@@ -63,6 +63,7 @@ router.post('/borrowdetails', (req, res, next)=> { borrowdetails.addBorrowDetail
 router.get('/getkarupanall', (req, res, next) => { karupans.getkarupanall(req, res); });//ดึงข้อมูลครุภัณฑ์ทั้งหมด
 router.get('/countkarupanall', (req, res, next) => { karupans.countkarupanall(req, res); });//นับจำนวนครุภัณฑ์ทั้งหมด
 router.get('/countkarupanstatus', (req, res, next) => { karupans.countkpssucess(req, res); });
-router.get('/countkarupandanger', (req, res, next)=> { karupans.countkpsdanger(req, res); })
+router.get('/countkarupandanger', (req, res, next)=> { karupans.countkpsdanger(req, res); });
+router.get('/getallborrows', (req, res, next) => { borrow.getAllBorrows(req, res); });//ดึงข้อมูลการยืมครุภัณฑ์ทั้งหมด
 
 module.exports = router;

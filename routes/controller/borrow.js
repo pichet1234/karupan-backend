@@ -24,5 +24,55 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ message: 'Server Error', error: error.message });
         }
+    },
+    getAllBorrows: async (req, res) => {
+        try {
+            const apidata = await borrow.aggregate([
+                            // 1) join person
+                            {
+                                $lookup: {
+                                from: 'person',
+                                localField: 'person_id',
+                                foreignField: '_id',
+                                as: 'person'
+                                }
+                            },
+                            {
+                                $unwind: '$person'   // แปลง array → object
+                            },
+
+                            // 2) join borrow_details
+                            {
+                                $lookup: {
+                                from: 'borrow_details',
+                                localField: '_id',        // borrow._id
+                                foreignField: 'borrowid', // borrow_details.borrowid
+                                as: 'details'
+                                }
+                            },
+
+                            // 3) (optional) เลือก field ที่ต้องการ
+                            {
+                                $project: {
+                                _id: 1,
+                                borrow_date: 1,
+                                return_date: 1,
+                                status: 1,
+
+                                // person
+                                'person._id': 1,
+                                'person.fname': 1,
+                                'person.lname': 1,
+                                'person.phone': 1,
+
+                                // details
+                                details: 1
+                                }
+                            }
+                            ])
+            res.status(200).json({ message: 'ดึงข้อมูลการยืมสำเร็จ', data: apidata });
+        } catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
     }
 };
