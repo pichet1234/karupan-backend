@@ -50,26 +50,20 @@ module.exports = {
                                 as: 'details'
                                 }
                             },
-
-                            // 3) (optional) เลือก field ที่ต้องการ
                             {
-                                $project: {
-                                _id: 1,
-                                borrow_date: 1,
-                                return_date: 1,
-                                status: 1,
-
-                                // person
-                                'person._id': 1,
-                                'person.fname': 1,
-                                'person.lname': 1,
-                                'person.phone': 1,
-
-                                // details
-                                details: 1
+                                $unwind: '$details'   // แปลง array → object
+                            },
+                            // 3) join karupans (จาก details.karupanid)
+                            {
+                                $lookup: {
+                                from: 'karupans',
+                                localField: 'details.karupanid', // FK
+                                foreignField: '_id', // PK
+                                as: 'karupan'
                                 }
-                            }
-                            ])
+                                },
+                                { $unwind: '$karupan' }
+                        ])
             res.status(200).json({ message: 'ดึงข้อมูลการยืมสำเร็จ', data: apidata });
         } catch (error) {
             res.status(500).json({ message: 'Server Error', error: error.message });
