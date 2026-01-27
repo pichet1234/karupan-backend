@@ -37,10 +37,6 @@ module.exports = {
                                 as: 'person'
                                 }
                             },
-                            {
-                                $unwind: '$person'   // แปลง array → object
-                            },
-
                             // 2) join borrow_details
                             {
                                 $lookup: {
@@ -50,9 +46,6 @@ module.exports = {
                                 as: 'details'
                                 }
                             },
-                            {
-                                $unwind: '$details'   // แปลง array → object
-                            },
                             // 3) join karupans (จาก details.karupanid)
                             {
                                 $lookup: {
@@ -61,8 +54,7 @@ module.exports = {
                                 foreignField: '_id', // PK
                                 as: 'karupan'
                                 }
-                                },
-                                { $unwind: '$karupan' }
+                                }
                         ])
             res.status(200).json({ message: 'ดึงข้อมูลการยืมสำเร็จ', data: apidata });
         } catch (error) {
