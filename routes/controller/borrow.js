@@ -18,7 +18,8 @@ module.exports = {
                 expenses: 0,
                 details: req.body.details,
                 remark: req.body.remark,
-                return_date: null
+                return_date: null,
+                countn: 0
             });
             res.status(201).json({ message: 'บันทึกการยืมสำเร็จ', data: apidata });
         } catch (error) {

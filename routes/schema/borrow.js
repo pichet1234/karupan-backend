@@ -16,7 +16,9 @@ var borrowSchema = new mongoose.Schema({
     remark: String,
     return_date: {
          type: Date
-    }
+    },
+    countn:Number,//นับจำนวนที่ยืม
+    statusborrow: String
 },{ collection: 'borrow'});
 
 module.exports = mongoose.model('borrow', borrowSchema);
