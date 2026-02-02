@@ -2,7 +2,7 @@ var mongoose = require('../connect');//เชื่อมต่อฐานข�
 var borrowDetails = require('../schema/borrow_details');
 var karupans = require('../schema/karupans');
 var borrow = require('../schema/borrow');
-
+var returnKarupan = require('../schema/return_karupan');
 module.exports = {
   addBorrowDetails: async (req, res) => {
     try {
@@ -67,32 +67,39 @@ module.exports = {
   
       const itemdata = req.body;   
   
-      if (!itemdata._id) {
+      if (!itemdata.borrowdetailid) {
         return res.status(400).json({ message: 'reborrowId ไม่ถูกต้อง' });
       }
   
-      const apidata = await borrowDetails.findByIdAndUpdate(
-        itemdata._id,
+      const apidata = await returnKarupan.create({
+        borrow_id: itemdata.borrow_id,
+        return_date: itemdata.returnDate,
+        receiver_id: itemdata.receiver,
+        note: itemdata.returnRemark,
+        deposit: itemdata.deposit
+      });
+      await borrowDetails.findByIdAndUpdate(
+        itemdata.borrowdetailid,
         { statuskarupan: "คืนแล้ว" },
         { new: true }
       );
   
       await karupans.findByIdAndUpdate(
-        apidata.karupanid,
+        itemdata.karupanid,
         { status: "ใช้งานได้" }
       );
   
       await borrow.findByIdAndUpdate(
-        apidata.borrowid,
+        apidata.borrow_id,
         { $inc: { countn: -1 } },
         { new: true }
       );
   
       // ถ้า countn = 0 → คืนสำเร็จ
-      const borrowDoc = await borrow.findById(apidata.borrowid);
+      const borrowDoc = await borrow.findById(apidata.borrow_id);
       if (borrowDoc.countn === 0) {
         await borrow.findByIdAndUpdate(
-          apidata.borrowid,
+          apidata.borrow_id,
           { statusborrow: "คืนสำเร็จ" },
           { new: true }
         );
