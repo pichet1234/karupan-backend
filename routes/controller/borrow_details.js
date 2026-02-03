@@ -63,7 +63,6 @@ module.exports = {
   },
   returnReborwDetl: async (req, res) => {
     try {
-      console.log(req.body);
   
       const itemdata = req.body;   
   
