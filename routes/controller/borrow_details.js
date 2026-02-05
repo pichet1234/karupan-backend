@@ -14,6 +14,9 @@ module.exports = {
         });
       }
 
+      const totalExpenses = items.reduce((sum, item) => {
+            return sum + Number(item.diposit || 0);
+        }, 0);
       // แปลงข้อมูลให้ตรง schema
       const docs = items.map(item => ({
         borrowid: item.borrowid,
@@ -40,7 +43,7 @@ module.exports = {
       const borrowUpdatePromises = apidata.map(item => 
         borrow.findByIdAndUpdate(
           item.borrowid,
-          { $inc: { countn: 1 } },
+          { $inc: { countn: 1 }, $set: { expenses: totalExpenses }},
           { new: true }
         )
       );
@@ -69,7 +72,6 @@ module.exports = {
       if (!itemdata.borrowdetailid) {
         return res.status(400).json({ message: 'reborrowId ไม่ถูกต้อง' });
       }
-  
       const apidata = await returnKarupan.create({
         borrow_id: itemdata.borrow_id,
         return_date: itemdata.returnDate,
@@ -90,19 +92,32 @@ module.exports = {
   
       await borrow.findByIdAndUpdate(
         apidata.borrow_id,
-        { $inc: { countn: -1 } },
-        { new: true }
-      );
+        [{
+            $set: {
+              countn: { $subtract: ["$countn", 1] },
+              expenses: {
+                $max: [
+                  { $subtract: ["$expenses", Number(itemdata.deposit || 0)] },0]
+                      }
+                  }
+          }]);
+
   
       // ถ้า countn = 0 → คืนสำเร็จ
       const borrowDoc = await borrow.findById(apidata.borrow_id);
-      if (borrowDoc.countn === 0) {
-        await borrow.findByIdAndUpdate(
-          apidata.borrow_id,
-          { statusborrow: "คืนสำเร็จ" },
-          { new: true }
-        );
-      }
+
+        if (borrowDoc.countn === 0) {
+          await borrow.findByIdAndUpdate(
+            apidata.borrow_id,
+            {
+              $set: {
+                statusborrow: "คืนสำเร็จ",
+                expenses: 0
+              }
+            },
+            { new: true }
+          );
+        }
   
       res.status(200).json({ message: 'คืนการยืมสำเร็จ', data: apidata });
   
