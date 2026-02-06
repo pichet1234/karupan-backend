@@ -3,6 +3,7 @@ var borrowDetails = require('../schema/borrow_details');
 var karupans = require('../schema/karupans');
 var borrow = require('../schema/borrow');
 var returnKarupan = require('../schema/return_karupan');
+var finance = require('../schema/financelogs');
 module.exports = {
   addBorrowDetails: async (req, res) => {
     try {
@@ -79,6 +80,16 @@ module.exports = {
         note: itemdata.returnRemark,
         deposit: itemdata.deposit
       });
+
+      await finance.create({
+        borrowid: itemdata.borrow_id,
+        borrowdetailid: itemdata.borrowdetailid,
+        amount: itemdata.deposit,
+        type: "income",
+        note: itemdata.note || "ค่ามัดจำ"
+      });
+
+
       await borrowDetails.findByIdAndUpdate(
         itemdata.borrowdetailid,
         { statuskarupan: "คืนแล้ว" },
