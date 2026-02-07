@@ -67,5 +67,7 @@ router.get('/countkarupandanger', (req, res, next)=> { karupans.countkpsdanger(r
 router.get('/getallborrows', (req, res, next) => { borrow.getAllBorrows(req, res); });//ดึงข้อมูลการยืมครุภัณฑ์ทั้งหมด
 router.post('/returnborrow', (req, res, next)=> { borrowdetails.returnReborwDetl(req, res); });//คืนครุภัณฑ์
 router.delete('/removeborwd/:id', (req, res, next)=>{ borrowdetails.removeReborwDetl(req, res);});
-
+router.get('/countborrowstatus', (req, res, next)=>{ borrow.countStatusone(req, res);});//นับจำนวนการยืมที่ยังไม่คืน
+router.get('/countborrowstatussuccess', (req, res, next)=>{ borrow.countStatustwo(req, res);});//นับจำนวนการยืมที่คืนสำเร็จ
+router.get('/countborrowall', (req, res, next)=>{ borrow.countborrowAll(req, res);});//นับจำนวนการยืมทั้งหมด
 module.exports = router;

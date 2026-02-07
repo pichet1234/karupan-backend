@@ -15,9 +15,7 @@ module.exports = {
         });
       }
 
-      const totalExpenses = items.reduce((sum, item) => {
-            return sum + Number(item.diposit || 0);
-        }, 0);
+
       // แปลงข้อมูลให้ตรง schema
       const docs = items.map(item => ({
         borrowid: item.borrowid,
@@ -39,7 +37,9 @@ module.exports = {
       );
 
       await Promise.all(updatePromises);
-
+      const totalExpenses = items.reduce((sum, item) => {
+            return sum + Number(item.diposit || 0);
+        }, 0);
       // Update countn in borrow document
       const borrowUpdatePromises = apidata.map(item => 
         borrow.findByIdAndUpdate(
@@ -100,7 +100,7 @@ module.exports = {
         itemdata.karupanid,
         { status: "ใช้งานได้" }
       );
-  
+  //  เปลี่ยนเป็นลบค่าที่ส่งมา itemdata.deposit 
       await borrow.findByIdAndUpdate(
         apidata.borrow_id,
         [{
