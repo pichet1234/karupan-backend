@@ -9,6 +9,7 @@ var karupans = require('./controller/karupans');
 var person = require('./controller/person');
 var borrow = require('./controller/borrow');
 var borrowdetails = require('./controller/borrow_details');
+var financeLogs = require('./controller/financelogs');
 
 router.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*'); // ระบุ origin ให้ชัดเจน
@@ -70,4 +71,6 @@ router.delete('/removeborwd/:id', (req, res, next)=>{ borrowdetails.removeReborw
 router.get('/countborrowstatus', (req, res, next)=>{ borrow.countStatusone(req, res);});//นับจำนวนการยืมที่ยังไม่คืน
 router.get('/countborrowstatussuccess', (req, res, next)=>{ borrow.countStatustwo(req, res);});//นับจำนวนการยืมที่คืนสำเร็จ
 router.get('/countborrowall', (req, res, next)=>{ borrow.countborrowAll(req, res);});//นับจำนวนการยืมทั้งหมด
+router.get('/getfinanceLogs', (req, res, next)=> { financeLogs.getAllFinanceLogs(req, res); });//ดึงข้อมูลบัญชีการเงินทั้งหมด
+
 module.exports = router;
