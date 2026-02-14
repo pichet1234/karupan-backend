@@ -140,5 +140,61 @@ module.exports = {
         catch (error) {
             res.status(500).json({ message: 'Server Error', error: error.message });
         }
+    },
+    deletekarupan: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const deletedKarupan = await karupans.findByIdAndDelete(id);
+            if (!deletedKarupan) {
+                return res.status(404).json({ message: 'karupan not found' });
+            }
+            res.status(200).json({ message: 'karupan deleted successfully', data: deletedKarupan });
+        } catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
+    },
+    updateKarupan: async (req, res) => {
+        try {
+    const { _id,brand,detail, expenditure,karupanCode,kname,price,redate,station,status,usefullife } = req.body;
+        // ✅ เช็ค id
+    if (!req.body._id) {
+      return res.status(400).json({
+        message: 'Missing karupan ID'
+      });
+    }
+    // ✅ เช็คไฟล์ภาพใหม่
+    let imageUrl = req.body.imageUrl || '';
+    if (req.file) {
+      imageUrl = `uploads/${req.file.filename}`;
+    }
+
+    // ✅ object สำหรับ update
+    const updateData = {
+      brand,
+      detail,
+      expenditure,
+      imageUrl,
+      karupanCode,
+      kname,
+      price: Number(price),
+      redate: new Date(redate),
+      station,
+      status,
+      usefullife: Number(usefullife)
+    };
+    // ✅ update database
+    const updatedKarupan = await karupans.findByIdAndUpdate(
+      _id,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedKarupan) {
+      return res.status(404).json({ message: 'Karupan not found' });
+    }
+    res.status(200).json({ message: 'Update success', data: updatedKarupan });
+    } catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
     }
 }

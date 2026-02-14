@@ -72,5 +72,7 @@ router.get('/countborrowstatus', (req, res, next)=>{ borrow.countStatusone(req, 
 router.get('/countborrowstatussuccess', (req, res, next)=>{ borrow.countStatustwo(req, res);});//นับจำนวนการยืมที่คืนสำเร็จ
 router.get('/countborrowall', (req, res, next)=>{ borrow.countborrowAll(req, res);});//นับจำนวนการยืมทั้งหมด
 router.get('/getfinanceLogs', (req, res, next)=> { financeLogs.getAllFinanceLogs(req, res); });//ดึงข้อมูลบัญชีการเงินทั้งหมด
+router.delete('/removekarupann/:id', (req, res, next)=>{ karupans.deletekarupan(req, res);});//ลบครุภัณฑ์
+router.post('/updatekarupan', upload.single('file'), (req, res, next)=>{ karupans.updateKarupan(req, res);});//แก้ไขครุภัณฑ์
 
 module.exports = router;
