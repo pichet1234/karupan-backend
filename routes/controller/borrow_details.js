@@ -15,9 +15,7 @@ module.exports = {
         });
       }
 
-      const totalExpenses = items.reduce((sum, item) => {
-            return sum + Number(item.diposit || 0);
-        }, 0);
+
       // แปลงข้อมูลให้ตรง schema
       const docs = items.map(item => ({
         borrowid: item.borrowid,
@@ -30,21 +28,33 @@ module.exports = {
       
         const apidata = await borrowDetails.insertMany(docs);
 
-      const updatePromises = apidata.map(item => 
-        karupans.findByIdAndUpdate(
-          item.karupanid,
-          { status: "ถูกยืม" },
-          { new: true }
-        )
-      );
+          await Promise.all(
+            apidata.map(item =>
+              karupans.findByIdAndUpdate(
+                item.karupanid,
+                { status: "ถูกยืม" }
+              )
+            )
+          );
 
-      await Promise.all(updatePromises);
+      const totalDeposit = items.reduce((sum, item) => {
+            return sum + Number(item.diposit || 0);
+          }, 0);
+      await finance.create({
+        borrowid: items[0].borrowid,
+        status: 'borrowed',
+        depositReceived: totalDeposit,
+        refundPaid: 0,
+        deductedAmount: 0,
+        note: 'รับเงินประกันตอนยืม'
+      });
+
 
       // Update countn in borrow document
       const borrowUpdatePromises = apidata.map(item => 
         borrow.findByIdAndUpdate(
           item.borrowid,
-          { $inc: { countn: 1 }, $set: { expenses: totalExpenses }},
+          { $inc: { countn: 1 }},
           { new: true }
         )
       );
@@ -77,43 +87,39 @@ module.exports = {
         borrow_id: itemdata.borrow_id,
         return_date: itemdata.returnDate,
         receiver_id: itemdata.receiver,
-        note: itemdata.returnRemark,
-        deposit: itemdata.deposit
+        note: itemdata.returnRemark
       });
-
+      const borrowFinance = await finance.findOne({
+        borrowid: itemdata.borrow_id,
+        status: 'borrowed'
+      });
+      const refundPaid = Number(itemdata.deposit || 0);
+      const deductedAmount =Math.max(borrowFinance.depositReceived - refundPaid, 0);
       await finance.create({
         borrowid: itemdata.borrow_id,
         borrowdetailid: itemdata.borrowdetailid,
-        amount: itemdata.deposit,
-        type: "income",
-        note: itemdata.note || "ค่ามัดจำ"
+        status: 'returned',
+        depositReceived: 0,
+        refundPaid: refundPaid,
+        deductedAmount: deductedAmount,
+        note: itemdata.note || 'คืนเงิน / หักค่าบำรุง'
       });
-
 
       await borrowDetails.findByIdAndUpdate(
         itemdata.borrowdetailid,
-        { statuskarupan: "คืนแล้ว" },
-        { new: true }
+        { statuskarupan: "คืนแล้ว" }
       );
   
       await karupans.findByIdAndUpdate(
         itemdata.karupanid,
         { status: "ใช้งานได้" }
       );
-  
+
       await borrow.findByIdAndUpdate(
         apidata.borrow_id,
-        [{
-            $set: {
-              countn: { $subtract: ["$countn", 1] },
-              expenses: {
-                $max: [
-                  { $subtract: ["$expenses", Number(itemdata.deposit || 0)] },0]
-                      }
-                  }
-          }]);
+        { $inc: { countn: -1 } },
+        );
 
-  
       // ถ้า countn = 0 → คืนสำเร็จ
       const borrowDoc = await borrow.findById(apidata.borrow_id);
 

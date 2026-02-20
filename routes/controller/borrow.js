@@ -18,6 +18,7 @@ module.exports = {
                 expenses: 0,
                 details: req.body.details,
                 remark: req.body.remark,
+                statusborrow:'ยังไม่คืน',
                 return_date: null,
                 countn: 0
             });
@@ -81,9 +82,33 @@ getAllBorrows: async (req, res) => {
 
     ]);
 
-    res.status(200).json({ message: 'ดึงข้อมูลการยืมสำเร็จ', data: apidata });
-  } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+        res.status(200).json({ message: 'ดึงข้อมูลการยืมสำเร็จ', data: apidata });
+     } catch (error) {
+      res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+  },
+  countStatusone: async (req, res) => {
+    try {
+      const count = await borrow.countDocuments({ statusborrow: 'ยังไม่คืน' });
+      res.status(200).json({ message: 'นับจำนวนการยืมที่ยังไม่คืนสำเร็จ', count: count });
+    } catch (error) {
+      res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+  },
+  countStatustwo: async (req, res) => {
+    try {
+      const count = await borrow.countDocuments({ statusborrow: 'คืนสำเร็จ' });
+      res.status(200).json({ message: 'นับจำนวนการยืมที่คืนสำเร็จ', count: count });
+    } catch (error) {
+      res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+  },
+  countborrowAll: async (req, res) => {
+    try {
+      const count = await borrow.countDocuments();
+      res.status(200).json({ message: 'นับจำนวนการยืมทั้งหมดสำเร็จ', count: count });
+    } catch (error) {
+      res.status(500).json({ message: 'Server Error', error: error.message });
+    }
   }
-}
 };
