@@ -145,6 +145,24 @@ module.exports = {
             res.status(500).json({ message: 'Server Error', error: error.message });
         }
     },
+    countkborrow: async (req, res) =>{
+        try{ 
+            const result = await karupans.aggregate([
+                {
+                    $match: { status:'ถูกยืม' }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: 1 }
+                    }
+                }
+            ]);
+            res.status(200).json({ message: 'Success', result});
+         }catch (error){
+            res.status(500).json({ message:'', error: error.message });
+        }
+    },
     deletekarupan: async (req, res) => {
         try {
             const { id } = req.params;

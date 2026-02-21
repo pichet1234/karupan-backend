@@ -74,5 +74,6 @@ router.get('/countborrowall', (req, res, next)=>{ borrow.countborrowAll(req, res
 router.get('/getfinanceLogs', (req, res, next)=> { financeLogs.getAllFinanceLogs(req, res); });//ดึงข้อมูลบัญชีการเงินทั้งหมด
 router.delete('/removekarupann/:id', (req, res, next)=>{ karupans.deletekarupan(req, res);});//ลบครุภัณฑ์
 router.post('/updatekarupan', upload.single('file'), (req, res, next)=>{ karupans.updateKarupan(req, res);});//แก้ไขครุภัณฑ์
+router.get('/countkborrw', (req, res, next) =>{ karupans.countkborrow(req,res);});
 
 module.exports = router;
