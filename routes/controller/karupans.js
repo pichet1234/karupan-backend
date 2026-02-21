@@ -6,7 +6,7 @@ module.exports = {
     //=============================== แบบทั่วไป =================================//
     addkarupans: async (req, res) => { 
         try{
-            let imageUrl = '';
+            let imageUrl = 'uploads/default.png';
             if (req.file) {
               imageUrl = `uploads/${req.file.filename}`;
             }
