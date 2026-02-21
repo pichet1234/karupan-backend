@@ -6,9 +6,11 @@ module.exports = {
     //=============================== แบบทั่วไป =================================//
     addkarupans: async (req, res) => { 
         try{
-            let imageUrl = 'uploads/default.png';
+            let imageUrl = '';
             if (req.file) {
               imageUrl = `uploads/${req.file.filename}`;
+            }else{
+                imageUrl = 'uploads/default.jpg';
             }
             const apidata = await karupans.create({
                 kname: req.body.kname,
@@ -36,6 +38,8 @@ module.exports = {
             let imageUrl = '';
             if (req.file) {
               imageUrl = `uploads/${req.file.filename}`;
+            }else{
+                imageUrl = 'uploads/default.jpg';
             }
                 const apidata = await karupans.create({
                 kname: req.body.kname,
