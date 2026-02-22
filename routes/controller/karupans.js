@@ -93,6 +93,14 @@ module.exports = {
                         foreignField: '_id',
                         as: 'karupanTypeInfo'
                     }
+                },
+                {
+                    $lookup: {
+                    from: 'regitdonate',
+                    localField: '_id',        // karupans._id
+                    foreignField: 'karupanid', // regitdonate.karupanid
+                    as: 'donateInfo'
+                    }
                 }
             ]);
             res.status(200).json({ message: 'Success', data }); 
