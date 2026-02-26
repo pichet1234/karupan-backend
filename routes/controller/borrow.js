@@ -46,8 +46,14 @@ getAllBorrows: async (req, res) => {
           preserveNullAndEmptyArrays: true
         }
       },
-
-      // 2+3) join borrow_details + karupans (รวมกัน)
+      {
+        $lookup: {
+                from: 'financelogs',
+                localField: '_id',
+                foreignField: 'borrowid',
+                as: 'financelog'
+              }
+      },
       {
         $lookup: {
           from: 'borrow_details',
