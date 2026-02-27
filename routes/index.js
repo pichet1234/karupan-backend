@@ -3,6 +3,9 @@ var router = express.Router();
 const path = require('path');
 const fs = require('fs');  
 const multer = require('multer');
+const auth = require('./controller/auth');
+const authenticate = require('./controller/authenticate');
+const authorize = require('./controller/authorize');
 
 var karupanType = require('./controller/karupanType');
 var karupans = require('./controller/karupans');
@@ -75,5 +78,24 @@ router.get('/getfinanceLogs', (req, res, next)=> { financeLogs.getAllFinanceLogs
 router.delete('/removekarupan/:id', (req, res, next)=>{ karupans.deletekarupan(req, res);});//ลบครุภัณฑ์
 router.post('/updatekarupan', upload.single('file'), (req, res, next)=>{ karupans.updateKarupan(req, res);});//แก้ไขครุภัณฑ์
 router.get('/countkborrw', (req, res, next) =>{ karupans.countkborrow(req,res);});
+
+router.post('/register', (req, res, next)=>{ auth.register(req, res);});
+router.post('/login', (req, res, next)=>{ auth.login(req, res);});
+router.post('/refresh', (req, res, next)=>{ auth.refresh(req, res);});
+router.post('/refresh', (req, res, next)=>{ auth.logout(req, res);});
+
+// router.post(
+//   '/addkarupan',
+//   authenticate,
+//   authorize(['admin', 'staff']),
+//   controller.addKarupan
+// );
+
+// router.delete(
+//   '/deletekarupan/:id',
+//   authenticate,
+//   authorize(['admin']),
+//   controller.deleteKarupan
+// );
 
 module.exports = router;
