@@ -82,7 +82,7 @@ router.get('/countkborrw', (req, res, next) =>{ karupans.countkborrow(req,res);}
 router.post('/register', (req, res, next)=>{ auth.register(req, res);});
 router.post('/login', (req, res, next)=>{ auth.login(req, res);});
 router.post('/refresh', (req, res, next)=>{ auth.refresh(req, res);});
-router.post('/refresh', (req, res, next)=>{ auth.logout(req, res);});
+router.post('/logout', (req, res, next)=>{ auth.logout(req, res);});
 
 // router.post(
 //   '/addkarupan',

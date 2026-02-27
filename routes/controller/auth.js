@@ -1,5 +1,6 @@
 const User = require('../schema/users');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 function generateAccessToken(user) {
   return jwt.sign(
@@ -20,7 +21,7 @@ function generateRefreshToken(user) {
 module.exports = {
     register: async(req, res)=>{
         try {
-            const { username, password, fullname, role } = req.body;
+            const { username, password, fullname, email, position, tel, role } = req.body;
         
             const exist = await User.findOne({ username });
             if (exist) return res.status(400).json({ message: 'Username already exists' });
@@ -37,27 +38,52 @@ module.exports = {
               role
             });
         
-            res.json({ message: 'User created' });
+            res.json({ message: 'User created' ,data:user});
           } catch (err) {
             res.status(500).json(err);
           }
     },
-    login: async(req, res)=>{
+    login: async (req, res) => {
         try {
-            const user = await User.findOne({ username: req.body.username });
-            if (!user) return res.status(400).json({ message: 'Invalid' });
-          
-            const accessToken = generateAccessToken(user);
-            const refreshToken = generateRefreshToken(user);
-          
-            user.refreshToken = refreshToken;
-            await user.save();
-          
-            res.json({ accessToken, refreshToken });
-          } catch (err) {
-            res.status(500).json(err);
+          const { username, password } = req.body;
+      
+          // 🔎 ตรวจ input
+          if (!username || !password) {
+            return res.status(400).json({ message: 'Username and password required' });
           }
-    },
+      
+          const user = await User.findOne({ username });
+          if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+          }
+      
+          // 🔐 ตรวจรหัสผ่าน
+          const isMatch = await bcrypt.compare(password, user.password);
+          if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+          }
+      
+          // 🚫 เช็ค user ถูกปิดหรือไม่
+          if (user.isActive === false) {
+            return res.status(403).json({ message: 'User is disabled' });
+          }
+      
+          const accessToken = generateAccessToken(user);
+          const refreshToken = generateRefreshToken(user);
+      
+          user.refreshToken = refreshToken;
+          await user.save();
+      
+          res.json({
+            accessToken,
+            refreshToken
+          });
+      
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({ message: 'Server error', error: err.message });
+        }
+      },
     refresh: async(req, res)=>{
         const { refreshToken } = req.body;
         if (!refreshToken) return res.sendStatus(401);
