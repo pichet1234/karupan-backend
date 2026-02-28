@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   tel:{ type: String, require: true},
   role: {
     type: String,
-    enum: ['admin', 'staff', 'viewer'],
+    enum: ['superadmin','admin', 'staff', 'viewer'],
     default: 'viewer'
   },
   isActive: { type: Boolean, default: true }

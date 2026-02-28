@@ -1,5 +1,6 @@
 const User = require('../schema/users');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 function generateAccessToken(user) {
   return jwt.sign(
@@ -20,7 +21,7 @@ function generateRefreshToken(user) {
 module.exports = {
     register: async(req, res)=>{
         try {
-            const { username, password, fullname, role } = req.body;
+            const { username, password, fullname,email,position, tel, role } = req.body;
         
             const exist = await User.findOne({ username });
             if (exist) return res.status(400).json({ message: 'Username already exists' });
@@ -43,20 +44,33 @@ module.exports = {
           }
     },
     login: async(req, res)=>{
-        try {
-            const user = await User.findOne({ username: req.body.username });
-            if (!user) return res.status(400).json({ message: 'Invalid' });
-          
-            const accessToken = generateAccessToken(user);
-            const refreshToken = generateRefreshToken(user);
-          
-            user.refreshToken = refreshToken;
-            await user.save();
-          
-            res.json({ accessToken, refreshToken });
-          } catch (err) {
-            res.status(500).json(err);
+              try {
+          const { username, password } = req.body;
+
+          // 1️⃣ ตรวจสอบว่ามี user หรือไม่
+          const user = await User.findOne({ username });
+          if (!user) {
+            return res.status(400).json({ message: 'Invalid username or password' });
           }
+
+          // 2️⃣ ตรวจสอบรหัสผ่าน
+          const isMatch = await bcrypt.compare(password, user.password);
+          if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid username or password' });
+          }
+
+          // 3️⃣ สร้าง token เมื่อผ่านการตรวจสอบแล้ว
+          const accessToken = generateAccessToken(user);
+          const refreshToken = generateRefreshToken(user);
+
+          user.refreshToken = refreshToken;
+          await user.save();
+
+          res.json({ accessToken, refreshToken });
+
+        } catch (err) {
+          res.status(500).json({ message: 'Server error', error: err.message });
+        }
     },
     refresh: async(req, res)=>{
         const { refreshToken } = req.body;
