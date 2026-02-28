@@ -16,6 +16,7 @@
     "express-fileupload": "^1.5.2",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.3",
+    "jwt-decode": "^4.0.0",
     "mongoose": "^8.23.0",
     "morgan": "~1.9.1",
     "multer": "^2.0.2",

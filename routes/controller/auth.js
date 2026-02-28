@@ -2,6 +2,7 @@ const User = require('../schema/users');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+
 function generateAccessToken(user) {
   return jwt.sign(
     { id: user._id, role: user.role },
@@ -43,34 +44,40 @@ module.exports = {
             res.status(500).json(err);
           }
     },
-    login: async(req, res)=>{
-              try {
-          const { username, password } = req.body;
+    login: async (req, res) => {
+      try {
+        const { username, password } = req.body;
 
-          // 1️⃣ ตรวจสอบว่ามี user หรือไม่
-          const user = await User.findOne({ username });
-          if (!user) {
-            return res.status(400).json({ message: 'Invalid username or password' });
-          }
+        const user = await User.findOne({ username });
 
-          // 2️⃣ ตรวจสอบรหัสผ่าน
-          const isMatch = await bcrypt.compare(password, user.password);
-          if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid username or password' });
-          }
-
-          // 3️⃣ สร้าง token เมื่อผ่านการตรวจสอบแล้ว
-          const accessToken = generateAccessToken(user);
-          const refreshToken = generateRefreshToken(user);
-
-          user.refreshToken = refreshToken;
-          await user.save();
-
-          res.json({ accessToken, refreshToken });
-
-        } catch (err) {
-          res.status(500).json({ message: 'Server error', error: err.message });
+        if (!user) {
+          return res.status(400).json({ message: 'Invalid username or password' });
         }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+          return res.status(400).json({ message: 'Invalid username or password' });
+        }
+
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        res.status(200).json({
+          accessToken,
+          refreshToken,
+          role: user.role   // ✅ ส่ง role กลับ
+        });
+
+      } catch (err) {
+        res.status(500).json({
+          message: 'Server error',
+          error: err.message
+        });
+      }
     },
     refresh: async(req, res)=>{
         const { refreshToken } = req.body;
