@@ -1,11 +1,8 @@
 const User = require('../schema/users');
 const jwt = require('jsonwebtoken');
-<<<<<<< HEAD
-const bcrypt = require('bcryptjs');
-=======
 const bcrypt = require('bcrypt');
 
->>>>>>> 20b1b651debd19f34613d9023348cc6a30255b13
+
 
 function generateAccessToken(user) {
   return jwt.sign(
@@ -26,11 +23,7 @@ function generateRefreshToken(user) {
 module.exports = {
     register: async(req, res)=>{
         try {
-<<<<<<< HEAD
             const { username, password, fullname, email, position, tel, role } = req.body;
-=======
-            const { username, password, fullname,email,position, tel, role } = req.body;
->>>>>>> 20b1b651debd19f34613d9023348cc6a30255b13
         
             const exist = await User.findOne({ username });
             if (exist) return res.status(400).json({ message: 'Username already exists' });
@@ -53,48 +46,6 @@ module.exports = {
           }
     },
     login: async (req, res) => {
-<<<<<<< HEAD
-        try {
-          const { username, password } = req.body;
-      
-          // 🔎 ตรวจ input
-          if (!username || !password) {
-            return res.status(400).json({ message: 'Username and password required' });
-          }
-      
-          const user = await User.findOne({ username });
-          if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-          }
-      
-          // 🔐 ตรวจรหัสผ่าน
-          const isMatch = await bcrypt.compare(password, user.password);
-          if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-          }
-      
-          // 🚫 เช็ค user ถูกปิดหรือไม่
-          if (user.isActive === false) {
-            return res.status(403).json({ message: 'User is disabled' });
-          }
-      
-          const accessToken = generateAccessToken(user);
-          const refreshToken = generateRefreshToken(user);
-      
-          user.refreshToken = refreshToken;
-          await user.save();
-      
-          res.json({
-            accessToken,
-            refreshToken
-          });
-      
-        } catch (err) {
-          console.error(err);
-          res.status(500).json({ message: 'Server error', error: err.message });
-        }
-      },
-=======
       try {
         const { username, password } = req.body;
 
@@ -129,7 +80,6 @@ module.exports = {
         });
       }
     },
->>>>>>> 20b1b651debd19f34613d9023348cc6a30255b13
     refresh: async(req, res)=>{
         const { refreshToken } = req.body;
         if (!refreshToken) return res.sendStatus(401);
