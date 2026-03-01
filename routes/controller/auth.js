@@ -70,7 +70,13 @@ module.exports = {
         res.status(200).json({
           accessToken,
           refreshToken,
-          role: user.role   // ✅ ส่ง role กลับ
+          user: {
+            fullname: user.fullname,
+            email: user.email,
+            position: user.position,
+            tel: user.tel,
+            role: user.role
+          }
         });
 
       } catch (err) {
