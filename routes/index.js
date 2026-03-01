@@ -1,3 +1,4 @@
+
 var express = require('express');
 var router = express.Router();
 const path = require('path');
@@ -6,6 +7,7 @@ const multer = require('multer');
 const auth = require('./controller/auth');
 const authenticate = require('./controller/authenticate');
 const authorize = require('./controller/authorize');
+const verifyRole = require('./controller/verifyRole');
 
 var karupanType = require('./controller/karupanType');
 var karupans = require('./controller/karupans');
@@ -13,6 +15,7 @@ var person = require('./controller/person');
 var borrow = require('./controller/borrow');
 var borrowdetails = require('./controller/borrow_details');
 var financeLogs = require('./controller/financelogs');
+var user = require('./controller/user');
 
 router.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*'); // ระบุ origin ให้ชัดเจน
@@ -78,6 +81,10 @@ router.get('/getfinanceLogs', (req, res, next)=> { financeLogs.getAllFinanceLogs
 router.delete('/removekarupan/:id', (req, res, next)=>{ karupans.deletekarupan(req, res);});//ลบครุภัณฑ์
 router.post('/updatekarupan', upload.single('file'), (req, res, next)=>{ karupans.updateKarupan(req, res);});//แก้ไขครุภัณฑ์
 router.get('/countkborrw', (req, res, next) =>{ karupans.countkborrow(req,res);});
+
+router.get('/getuser', verifyRole(['superadmin']), (req, res, next)=>{ user.getAllUsers(req, res); });
+router.get('/getuser/:id', (req, res, next)=>{ user.getUserById(req, res); });//ดึงข้อมูลบุคคลติดต่อตาม id
+router.delete('/deleteuser/:id', (req, res, next)=>{ user.deleteUser(req, res); });//ลบข้อมูลบุคคลติดต่อ
 
 router.post('/register', (req, res, next)=>{ auth.register(req, res);});
 router.post('/login', (req, res, next)=>{ auth.login(req, res);});
