@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 function generateAccessToken(user) {
   return jwt.sign(
     { id: user._id, role: user.role },
-    'ACCESS_SECRET',
+    process.env.ACCESS_TOKEN_SECRET,   // ✅ ใช้ env ตัวเดียวกับ verify
     { expiresIn: '15m' }
   );
 }
@@ -14,7 +14,7 @@ function generateAccessToken(user) {
 function generateRefreshToken(user) {
   return jwt.sign(
     { id: user._id },
-    'REFRESH_SECRET',
+    process.env.REFRESH_TOKEN_SECRET,  // ✅ ใช้ env เช่นกัน
     { expiresIn: '7d' }
   );
 }
