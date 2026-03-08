@@ -91,6 +91,9 @@ router.post('/login', (req, res, next)=>{ auth.login(req, res);});
 router.post('/refresh', (req, res, next)=>{ auth.refresh(req, res);});
 router.post('/logout', (req, res, next)=>{ auth.logout(req, res);});
 
+router.post('/editborrow', (req, res, next)=>{ borrow.editborrow(req, res); });//แก้ไขข้อมูลการยืม
+router.post('/removeborrow', (req, res, next)=>{ borrow.removeBorrow(req, res); });//ลบข้อมูลการยืม
+
 // router.post(
 //   '/addkarupan',
 //   authenticate,

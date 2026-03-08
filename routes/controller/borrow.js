@@ -1,5 +1,8 @@
 var mongoose = require('../connect');//เชื่อมต่อฐานข้อมูล
 var borrow = require('../schema/borrow');
+var borrow_details = require('../schema/borrow_details');
+var financelogs = require('../schema/financelogs');
+var karupans = require('../schema/karupans');
 
 module.exports = {
     addBorrow: async (req, res) => {
@@ -27,7 +30,74 @@ module.exports = {
             res.status(500).json({ message: 'Server Error', error: error.message });
         }
     },
-getAllBorrows: async (req, res) => {
+    editborrow: async (req, res) => {
+        try {
+           const {_id,village,patient,tambon,moo,bannumber,borrow_date,remark } = req.body;
+           if (!req.body._id){
+            return res.status(400).json({ message: 'ไม่พบข้อมูลการยืม' });
+           }
+           const dataUpdate = {
+            patient,
+            address: {
+              village,
+              tambon,
+              moo,
+              bannumber,
+            },
+            borrow_date: borrow_date ? new Date(borrow_date) : null,
+            remark
+           };
+            await borrow.findByIdAndUpdate(  
+                _id,
+              { $set: dataUpdate },
+              { new: true }
+            );
+           res.status(200).json({ message: 'อัปเดตข้อมูลการยืมสำเร็จ' });
+        } catch (error) {
+            res.status(500).json({ message: 'Server Error', error: error.message });
+        }
+    },
+    removeBorrow: async (req, res) => {
+        const session = await mongoose.startSession();
+              session.startTransaction();
+        try {
+              const  borrowid  = req.body._id;
+
+              if (!borrowid) {
+                return res.status(400).json({ message: "ไม่พบ borrow id" });
+              }
+               // 1️⃣ ดึงรายการครุภัณฑ์ที่ยืม
+             const details = await borrow_details.find({ borrowid }).session(session);
+              // 2️⃣ update ครุภัณฑ์กลับเป็นใช้งานได้
+              for (const item of details) {
+                await karupans.findByIdAndUpdate(
+                  item.karupanid,
+                  { $set: { statuskarupan: "ใช้งานได้" } },
+                  { session }
+                );
+              }
+            // 3️⃣ ลบ financelog
+              await financelogs.deleteMany({ borrowid }).session(session);
+
+              // 4️⃣ ลบ borrow details
+              await borrow_details.deleteMany({ borrowid }).session(session);
+
+              // 5️⃣ ลบ borrow
+              await borrow.findByIdAndDelete(borrowid).session(session);
+
+              await session.commitTransaction();
+              session.endSession();
+
+              res.status(200).json({
+                message: "ลบการยืมครุภัณฑ์สำเร็จ"
+              });
+        } catch (error) {
+          await session.abortTransaction();
+          session.endSession();
+          res.status(500).json({ message: "เกิดข้อผิดพลาด", error: error.message });
+        }
+    },
+    getAllBorrows: async (req, res) => {
   try {
     const apidata = await borrow.aggregate([
 
