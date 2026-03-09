@@ -143,24 +143,42 @@ module.exports = {
       res.status(500).json({ message: 'Server Error', error: error.message });
     }
   },
-  removeReborwDetl: async (req, res) => {
-    try {
-      const { id } = req.params;
-  
-      const borwDetl = await borrowDetails.findByIdAndDelete(id);
-  
-      if (!borwDetl) {
-        return res.status(404).json({ message: 'ไม่พบข้อมูล' });
-      }
-  
-      res.status(200).json({
-        message: 'ลบข้อมูลสำเร็จ',
-        data: borwDetl
+removeReborwDetl: async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    // หา borrowDetails ก่อน
+    const borwDetl = await borrowDetails.findById(id);
+
+    if (!borwDetl) {
+      return res.status(404).json({
+        message: 'ไม่พบข้อมูล'
       });
-  
-    } catch (err) {
-      res.status(500).json({ message: 'Server Error', error: err.message });
     }
+
+    // คืนสถานะครุภัณฑ์
+    await karupans.findByIdAndUpdate(
+      borwDetl.karupanid,
+      { status: "ใช้งานได้" }
+    );
+
+    // ลบ borrowDetails
+    await borrowDetails.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: 'ลบข้อมูลและคืนสถานะครุภัณฑ์สำเร็จ',
+      data: borwDetl
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      message: 'Server Error',
+      error: err.message
+    });
+
   }
+}
    
 };
