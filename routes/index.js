@@ -73,12 +73,12 @@ router.get('/countkarupanstatus', (req, res, next) => { karupans.countkpssucess(
 router.get('/countkarupandanger', (req, res, next)=> { karupans.countkpsdanger(req, res); });
 router.get('/getallborrows', (req, res, next) => { borrow.getAllBorrows(req, res); });//ดึงข้อมูลการยืมครุภัณฑ์ทั้งหมด
 router.post('/returnborrow', (req, res, next)=> { borrowdetails.returnReborwDetl(req, res); });//คืนครุภัณฑ์
-router.delete('/removeborwd/:id', (req, res, next)=>{ borrowdetails.removeReborwDetl(req, res);});
+router.delete('/removeborwd/:id',authenticate,authorize(['superadmin']), (req, res, next)=>{ borrowdetails.removeReborwDetl(req, res);});
 router.get('/countborrowstatus', (req, res, next)=>{ borrow.countStatusone(req, res);});//นับจำนวนการยืมที่ยังไม่คืน
 router.get('/countborrowstatussuccess', (req, res, next)=>{ borrow.countStatustwo(req, res);});//นับจำนวนการยืมที่คืนสำเร็จ
 router.get('/countborrowall', (req, res, next)=>{ borrow.countborrowAll(req, res);});//นับจำนวนการยืมทั้งหมด
 router.get('/getfinanceLogs', (req, res, next)=> { financeLogs.getAllFinanceLogs(req, res); });//ดึงข้อมูลบัญชีการเงินทั้งหมด
-router.delete('/removekarupan/:id', (req, res, next)=>{ karupans.deletekarupan(req, res);});//ลบครุภัณฑ์
+router.delete('/removekarupan/:id',authenticate,authorize(['superadmin']), (req, res, next)=>{ karupans.deletekarupan(req, res);});//ลบครุภัณฑ์
 router.post('/updatekarupan', upload.single('file'), (req, res, next)=>{ karupans.updateKarupan(req, res);});//แก้ไขครุภัณฑ์
 router.get('/countkborrw', (req, res, next) =>{ karupans.countkborrow(req,res);});
 
