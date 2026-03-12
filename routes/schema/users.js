@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
     enum: ['superadmin','admin', 'staff', 'viewer'],
     default: 'viewer'
   },
+  profileImage: {
+    type: String,
+    default: "images/profile1.jpg"
+  },
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 

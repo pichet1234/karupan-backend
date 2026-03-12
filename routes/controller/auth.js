@@ -75,7 +75,8 @@ module.exports = {
             email: user.email,
             position: user.position,
             tel: user.tel,
-            role: user.role
+            role: user.role,
+            profileImage: user.profileImage
           }
         });
 
